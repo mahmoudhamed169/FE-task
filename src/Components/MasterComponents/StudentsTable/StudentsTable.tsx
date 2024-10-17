@@ -1,16 +1,68 @@
-import React from "react";
-import { Student } from "../../../Interfaces/Interfaces";
+import React, { useState } from "react";
+import { AuthResponse, Student } from "../../../Interfaces/Interfaces";
 import { FilePenLine, Trash2 } from "lucide-react";
 import { Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import DeleteStudentModal from "../DeleteStudentModal/DeleteStudentModal";
+import toast from "react-hot-toast";
+import { apiClient } from "../../../Api/END-POINT";
+import { AxiosError } from "axios";
 
 interface Iprops {
   studentList: Student[];
   loading: boolean;
+  getStudents: () => void;
 }
 
-export default function StudentsTable({ studentList, loading }: Iprops) {
+export default function StudentsTable({
+  studentList,
+  loading,
+  getStudents,
+}: Iprops) {
   const navigate = useNavigate();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(
+    null
+  );
+
+  const handleShowDeleteModal = (id: string) => {
+    setSelectedStudentId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setSelectedStudentId(null);
+    setShowDeleteModal(false);
+  };
+
+  const deleteStudent = async () => {
+    if (!selectedStudentId) return;
+
+    const toastId = toast.loading("Processing...");
+    try {
+      const response = await apiClient.delete<AuthResponse>("/Student/Delete", {
+        params: { id: selectedStudentId },
+      });
+
+      const { Message, Success } = response.data;
+      console.log(response);
+
+      if (Success) {
+        toast.success(Message, { id: toastId });
+        handleCloseDeleteModal();
+        getStudents();
+      } else {
+        toast.error(Message || "An error occurred", { id: toastId });
+      }
+    } catch (error) {
+      console.log(error);
+      const axiosError = error as AxiosError<AuthResponse>;
+      toast.error(axiosError.response?.data.Message || "An error occurred", {
+        id: toastId,
+      });
+    }
+  };
+
   const handleEditeNavigation = (studentId: string) => {
     navigate(`/dashboard/edite-student/${studentId}`, { state: studentId });
   };
@@ -55,8 +107,11 @@ export default function StudentsTable({ studentList, loading }: Iprops) {
                 <td>{student.Email}</td>
                 <td>{student.NationalID}</td>
                 <td>{student.Age}</td>
-                <td className="d-flex ">
-                  <button className="btn text-danger">
+                <td className="d-flex">
+                  <button
+                    className="btn text-danger"
+                    onClick={() => handleShowDeleteModal(student.ID)}
+                  >
                     <Trash2 />
                   </button>
                   <button
@@ -71,6 +126,12 @@ export default function StudentsTable({ studentList, loading }: Iprops) {
           )}
         </tbody>
       </table>
+
+      <DeleteStudentModal
+        show={showDeleteModal}
+        onHide={handleCloseDeleteModal}
+        deleteStudent={deleteStudent}
+      />
     </>
   );
 }

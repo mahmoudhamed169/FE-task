@@ -52,7 +52,11 @@ export default function Home() {
       />
 
       <div className="mt-5">
-        <StudentsTable studentList={studentList} loading={loading} />
+        <StudentsTable
+          studentList={studentList}
+          loading={loading}
+          getStudents={getStudents}
+        />
       </div>
     </div>
   );
