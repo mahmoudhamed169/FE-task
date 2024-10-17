@@ -1,0 +1,15 @@
+.title {
+
+    position: relative;
+}
+
+.title::before {
+    content: "";
+    width: 7px;
+    height: 35px;
+    position: absolute;
+    background-color: #FEAF00;
+    right: 102%;
+    top: 0;
+
+}
