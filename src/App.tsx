@@ -7,6 +7,7 @@ import Register from "./Pages/AuthPages/Register/Register";
 import MasterLayout from "./Layouts/MasterLayout/MasterLayout";
 import Home from "./Pages/MasterPages/Home/Home";
 import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./Components/MasterComponents/ProtectedRoute/ProtectedRoute";
 
 function App() {
   const routes = createBrowserRouter([
@@ -22,7 +23,11 @@ function App() {
     },
     {
       path: "dashboard",
-      element: <MasterLayout />,
+      element: (
+        <ProtectedRoute>
+          <MasterLayout />
+        </ProtectedRoute>
+      ),
       errorElement: <NotFound />,
       children: [
         { index: true, element: <Home /> },
