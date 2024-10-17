@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AuthResponse, Student } from "../../../Interfaces/Interfaces";
 import { FilePenLine, Trash2 } from "lucide-react";
 import { Spinner } from "react-bootstrap";
@@ -24,7 +24,21 @@ export default function StudentsTable({
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(
     null
   );
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [filteredStudents, setFilteredStudents] =
+    useState<Student[]>(studentList);
 
+  useEffect(() => {
+    const filteredList = studentList.filter((student) => {
+      return (
+        student.Name.toLowerCase().includes(searchInput.toLowerCase()) ||
+        student.Mobile.includes(searchInput) ||
+        student.NationalID.includes(searchInput) ||
+        student.Age.toString().includes(searchInput)
+      );
+    });
+    setFilteredStudents(filteredList);
+  }, [searchInput, studentList]);
   const handleShowDeleteModal = (id: string) => {
     setSelectedStudentId(id);
     setShowDeleteModal(true);
@@ -77,6 +91,15 @@ export default function StudentsTable({
 
   return (
     <>
+      <div className="my-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search by Name, Mobile, National ID, or Age"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+      </div>
       <table className="table table-striped">
         <thead>
           <tr>
@@ -92,14 +115,14 @@ export default function StudentsTable({
           </tr>
         </thead>
         <tbody>
-          {studentList.length === 0 ? (
+          {filteredStudents.length === 0 ? (
             <tr>
               <td colSpan={7} className="text-center text-muted">
                 No records found.
               </td>
             </tr>
           ) : (
-            studentList.map((student) => (
+            filteredStudents.map((student) => (
               <tr key={student.ID}>
                 <th scope="row">{student.ID}</th>
                 <td>{student.Name}</td>
