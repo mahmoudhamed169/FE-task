@@ -3,9 +3,15 @@ export interface LoginRequest {
   Password: string;
 }
 
-export interface LoginResponse {
+export interface AuthResponse {
   Data: string;
   Message: string;
   Success: boolean;
   IsAuthorized: boolean;
+}
+
+export interface RegisterRequest {
+  Name: string;
+  UserName: string;
+  Password: string;
 }

@@ -2,11 +2,11 @@ import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
-import { LoginRequest, LoginResponse } from "../../../Interfaces/Interfaces";
+import { LoginRequest, AuthResponse } from "../../../Interfaces/Interfaces";
 import toast from "react-hot-toast";
 import { apiClient, AUTHENTICATION_URLS } from "../../../Api/END-POINT";
 import { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +25,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
     const toastId = toast.loading("Processing...");
     try {
-      const response = await apiClient.post<LoginResponse>(
+      const response = await apiClient.post<AuthResponse>(
         AUTHENTICATION_URLS.login,
         data
       );
@@ -44,7 +44,7 @@ export default function Login() {
         });
       }
     } catch (error) {
-      const axiosError = error as AxiosError<LoginResponse>;
+      const axiosError = error as AxiosError<AuthResponse>;
       toast.error(axiosError.response?.data.Message || "An error occurred", {
         id: toastId,
       });
@@ -68,12 +68,12 @@ export default function Login() {
             className="form-control"
             id="username"
             placeholder="Username"
-            {...register("username", {
+            {...register("UserName", {
               required: "Username is required",
             })}
           />
           {errors.username && (
-            <p className="text-danger p-1">{errors.username.message}</p>
+            <p className="text-danger p-1">{errors.UserName.message}</p>
           )}
         </div>
 
@@ -103,14 +103,20 @@ export default function Login() {
             <p className="text-danger p-1">{errors.password.message}</p>
           )}
         </div>
-
-        <button
-          type="submit"
-          className="btn btn-warning text-white w-100"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? <ClipLoader size={20} color="#ffffff" /> : "Sign In"}
-        </button>
+        <div className="d-flex justify-content-between">
+          <button
+            type="submit"
+            className="btn btn-warning text-white w-25"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <ClipLoader size={20} color="#ffffff" />
+            ) : (
+              "Sign In"
+            )}
+          </button>
+          <Link to={"/register"}>Register</Link>
+        </div>
       </form>
     </div>
   );
