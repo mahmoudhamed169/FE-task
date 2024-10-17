@@ -4,10 +4,12 @@ import { apiClient } from "../../../Api/END-POINT";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import StudentsTable from "../../../Components/MasterComponents/StudentsTable/StudentsTable";
+import CreatStudentModal from "../../../Components/MasterComponents/CreatStudentModal/CreatStudentModal";
 
 export default function Home() {
   const [studentList, setStudentList] = useState<Student[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [modalShow, setModalShow] = useState<boolean>(false);
 
   const getStudents = async () => {
     setLoading(true);
@@ -35,8 +37,19 @@ export default function Home() {
     <div className="container mt-5">
       <div className="d-flex justify-content-between">
         <h4>Student List</h4>
-        <button className="btn btn-warning text-white">Add new Studenet</button>
+        <button
+          className="btn btn-warning text-white"
+          onClick={() => setModalShow(true)}
+        >
+          Add new Student
+        </button>
       </div>
+
+      <CreatStudentModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        getStudents={getStudents}
+      />
 
       <div className="mt-5">
         <StudentsTable studentList={studentList} loading={loading} />
