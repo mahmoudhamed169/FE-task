@@ -5,7 +5,6 @@ import { AuthResponse } from "../../../Interfaces/Interfaces";
 import { apiClient } from "../../../Api/END-POINT";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
-import { SuccessResult } from "./../../../../node_modules/@remix-run/router/utils";
 
 interface CreatStudentModalProps {
   show: boolean;

@@ -8,6 +8,7 @@ import MasterLayout from "./Layouts/MasterLayout/MasterLayout";
 import Home from "./Pages/MasterPages/Home/Home";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./Components/MasterComponents/ProtectedRoute/ProtectedRoute";
+import EditeStudent from "./Pages/MasterPages/EditeStudent/EditeStudent";
 
 function App() {
   const routes = createBrowserRouter([
@@ -32,6 +33,7 @@ function App() {
       children: [
         { index: true, element: <Home /> },
         { path: "home", element: <Home /> },
+        { path: "edite-student/:id", element: <EditeStudent /> },
       ],
     },
   ]);

@@ -2,6 +2,7 @@ import React from "react";
 import { Student } from "../../../Interfaces/Interfaces";
 import { FilePenLine, Trash2 } from "lucide-react";
 import { Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 interface Iprops {
   studentList: Student[];
@@ -9,6 +10,11 @@ interface Iprops {
 }
 
 export default function StudentsTable({ studentList, loading }: Iprops) {
+  const navigate = useNavigate();
+  const handleEditeNavigation = (studentId: string) => {
+    navigate(`/dashboard/edite-student/${studentId}`, { state: studentId });
+  };
+
   if (loading) {
     return (
       <div className="text-center text-warning">
@@ -53,7 +59,10 @@ export default function StudentsTable({ studentList, loading }: Iprops) {
                   <button className="btn text-danger">
                     <Trash2 />
                   </button>
-                  <button className="btn text-warning">
+                  <button
+                    className="btn text-warning"
+                    onClick={() => handleEditeNavigation(student.ID)}
+                  >
                     <FilePenLine />
                   </button>
                 </td>
