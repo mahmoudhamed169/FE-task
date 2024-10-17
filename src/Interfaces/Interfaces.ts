@@ -15,3 +15,17 @@ export interface RegisterRequest {
   UserName: string;
   Password: string;
 }
+export interface Student {
+  ID: number;
+  Name: string;
+  Mobile: string;
+  Email: string;
+  NationalID: string;
+  Age: number;
+}
+export interface StudentResponse {
+  Data: Student[];
+  Message: string;
+  Success: boolean;
+  IsAuthorized: boolean;
+}
